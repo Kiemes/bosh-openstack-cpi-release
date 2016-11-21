@@ -15,7 +15,7 @@ module "base" {
   ext_net_cidr = "${var.ext_net_cidr}"
   concourse_external_network_cidr = "${var.concourse_external_network_cidr}"
   openstack_default_key_public_key = "${var.openstack_default_key_public_key}"
-  prefix = "bats"
+  prefix = "${var.key_prefix}"
   add_security_group = "1"
 }
 
@@ -104,6 +104,10 @@ variable "concourse_external_network_cidr" {
 
 variable "openstack_default_key_public_key" {
   description = "This is the actual public key which is uploaded"
+}
+
+variable "key_prefix" {
+  description = "This is the actual public key name prefix"
 }
 
 output "primary_net_id" {
