@@ -1,30 +1,36 @@
-provider "openstack" {
-  auth_url    = "${var.auth_url}"
-  user_name   = "${var.user_name}"
-  password    = "${var.password}"
-  tenant_name = "${var.tenant_name}"
-  domain_name = "${var.domain_name}"
-  insecure    = "${var.insecure}"
-}
-
 module "base" {
-  source                          = "github.com/cloudfoundry-incubator/bosh-openstack-cpi-release//ci/terraform/e2e/modules/base"
-  tenant_name                     = "${var.tenant_name}"
+  source                          = "../modules/base"
+  auth_url                        = "${var.auth_url}"
+  user_name                       = "${var.user_name}"
+  password                        = "${var.password}"
+  project_name                    = "${var.project_name}"
+  domain_name                     = "${var.domain_name}"
+  insecure                        = "${var.insecure}"
   dns_nameservers                 = "${var.dns_nameservers}"
   ext_net_name                    = "${var.ext_net_name}"
   ext_net_id                      = "${var.ext_net_id}"
   ext_net_cidr                    = "${var.ext_net_cidr}"
   region_name                     = "${var.region_name}"
-  v3_e2e_default_key_name_prefix  = "${var.v3_e2e_default_key_name_prefix}"
+  prefix                          = "${var.prefix}"
   concourse_external_network_cidr = "${var.concourse_external_network_cidr}"
   v3_e2e_default_key_public_key   = "${var.v3_e2e_default_key_public_key}"
+  e2e_net_cidr                    = "${var.e2e_net_cidr}"
 }
 
 module "config_drive" {
-  source                          = "github.com/cloudfoundry-incubator/bosh-openstack-cpi-release//ci/terraform/e2e/modules/config_drive"
+  source                          = "../modules/config_drive"
   region_name                     = "${var.region_name}"
+  auth_url                        = "${var.auth_url}"
+  user_name                       = "${var.user_name}"
+  password                        = "${var.password}"
+  project_name                    = "${var.project_name}"
+  domain_name                     = "${var.domain_name}"
+  insecure                        = "${var.insecure}"
   dns_nameservers                 = "${var.dns_nameservers}"
   e2e_router_id                   = "${module.base.e2e_router_id}"
+  no_dhcp_net_1_cidr              = "${var.no_dhcp_net_1_cidr}"
+  no_dhcp_net_2_cidr              = "${var.no_dhcp_net_2_cidr}"
+  prefix                          = "${var.prefix}"
 }
 
 variable "auth_url" {
@@ -48,7 +54,7 @@ variable "insecure" {
    description = "SSL certificate validation"
 }
 
-variable "tenant_name" {
+variable "project_name" {
   description = "OpenStack project/tenant name"
 }
 
@@ -57,7 +63,6 @@ variable "dns_nameservers" {
    description = "Comma-separated list of DNS server IPs"
 }
 
-# external network coordinates
 variable "ext_net_name" {
   description = "OpenStack external network name to register floating IP"
 }
@@ -70,12 +75,11 @@ variable "ext_net_cidr" {
   description = "OpenStack external network cidr"
 }
 
-# region/zone coordinates
 variable "region_name" {
   description = "OpenStack region name"
 }
 
-variable "v3_e2e_default_key_name_prefix" {
+variable "prefix" {
   default = "v3-e2e"
 }
 
@@ -84,6 +88,19 @@ variable "concourse_external_network_cidr" {
 }
 
 variable "v3_e2e_default_key_public_key" {
+  description = "This is the actual public key which is uploaded"
+}
+
+variable "e2e_net_cidr" {
+  description = "OpenStack e2e network cidr"
+}
+
+variable "no_dhcp_net_1_cidr" {
+  description = "OpenStack e2e network cidr 1 with DHCP disabled"
+}
+
+variable "no_dhcp_net_2_cidr" {
+  description = "OpenStack e2e network cidr 2 with DHCP disabled"
 }
 
 output "v3_e2e_net_no_dhcp_1_id" {
@@ -98,10 +115,14 @@ output "v3_e2e_net_id" {
   value = "${module.base.v3_e2e_net_id}"
 }
 
-output "v3_e2e_director_floating_ip" {
-  value = "${module.base.v3_e2e_director_floating_ip}"
+output "v3_e2e_director_public_ip" {
+  value = "${module.base.director_public_ip}"
 }
 
 output "v3_e2e_default_key_name" {
   value = "${module.base.v3_e2e_default_key_name}"
+}
+
+output "v3_e2e_net_no_dhcp_1_ip" {
+  value = "${module.config_drive.v3_e2e_net_no_dhcp_1_ip}"
 }
