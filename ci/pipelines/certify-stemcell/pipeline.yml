@@ -620,7 +620,7 @@ resources:
         bucket_path: terraform-e2e/
         access_key_id: {{s3_openstack_cpi_pipeline_access_key}}
         secret_access_key: {{s3_openstack_cpi_pipeline_secret_key}}
-      terraform_source: github.com/cloudfoundry-incubator/bosh-openstack-cpi-release//ci/terraform/e2e/modules/base
+      terraform_source: github.com/Kiemes/bosh-openstack-cpi-release//ci/terraform/e2e/modules/base
 
   - name: terraform-e2e-config-drive
     type: terraform
@@ -630,7 +630,7 @@ resources:
         bucket_path: terraform-e2e/
         access_key_id: {{s3_openstack_cpi_pipeline_access_key}}
         secret_access_key: {{s3_openstack_cpi_pipeline_secret_key}}
-      terraform_source: github.com/cloudfoundry-incubator/bosh-openstack-cpi-release//ci/terraform/e2e/config_drive
+      terraform_source: github.com/Kiemes/bosh-openstack-cpi-release//ci/terraform/e2e/config_drive
 
   - name: terraform-e2e-secondary-cpi
     type: terraform
@@ -640,7 +640,7 @@ resources:
         bucket_path: terraform-e2e/
         access_key_id: {{s3_openstack_cpi_pipeline_access_key}}
         secret_access_key: {{s3_openstack_cpi_pipeline_secret_key}}
-      terraform_source: github.com/cloudfoundry-incubator/bosh-openstack-cpi-release//ci/terraform/e2e/secondary_cpi
+      terraform_source: github.com/Kiemes/bosh-openstack-cpi-release//ci/terraform/e2e/secondary_cpi
 
   - name: bosh-cpi-dev-artifacts
     type: s3
@@ -689,7 +689,7 @@ resources:
   - name: bosh-cpi-src-in
     type: git
     source:
-      uri: https://github.com/cloudfoundry-incubator/bosh-openstack-cpi-release.git
+      uri: https://github.com/Kiemes/bosh-openstack-cpi-release.git
       branch: master
       ignore_paths:
         - releases/bosh-openstack-cpi/**
@@ -706,11 +706,3 @@ resources:
       regexp: .*-(\d+)-receipt\.json
       region_name: us-east-1
 
-  - name: send-an-email
-    type: email
-    source:
-      smtp:
-        host: {{email_host}}
-        port: {{email_port}}
-      from: {{email_from}}
-      to: [ {{email_to}} ]
