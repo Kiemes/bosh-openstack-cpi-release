@@ -145,7 +145,7 @@ jobs:
       - task: deploy-dummy-release-in-multiple-availability-zones
         tags: *tags
         timeout: *timeouts-long
-        file: bosh-cpi-src-in/ci/pipelines/certify-stemcell/tasks/deploy-dummy-release.yml
+        file: bosh-cpi-src-in/ci/pipelines/certify-stemcell/tasks/deploy-dummy-release-multiple-availability-zones.yml
         params:
           instance_flavor:             "m1.medium"
           bosh_admin_password:         {{bosh_admin_password}}
